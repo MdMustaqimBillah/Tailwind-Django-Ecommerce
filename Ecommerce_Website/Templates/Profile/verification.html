@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Verify Phone Number{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-xl overflow-hidden transform transition-all hover:scale-[1.01]">
+        <div class="bg-indigo-600 py-4 text-center text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-indigo-700 opacity-50"></div>
+            <h2 class="text-2xl font-bold tracking-tight relative z-10">Verify Your Phone</h2>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-center mb-6 space-x-2">
+                <!-- Bangladesh Flag SVG -->
+                <svg class="w-8 h-6" viewBox="0 0 640 480">
+                    <path fill="#006a4e" d="M0 0h640v480H0z"/>
+                    <circle cx="280" cy="240" r="160" fill="#f42a41"/>
+                </svg>
+                <span class="text-gray-600 font-medium">Bangladesh</span>
+            </div>
+            
+            <p class="text-center text-gray-600 mb-6">Enter your phone number</p>
+            
+            <form class="space-y-6" method="POST">
+                {% csrf_token %}
+
+                <div>
+                    <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1 relative flex items-center">
+                        <!-- Country Code -->
+                        <div class="absolute left-3 text-gray-500 font-mono">+880</div>
+                        <!-- Vertical Separator -->
+                        <div class="absolute left-14 h-6 w-px bg-gray-300"></div>
+                        
+                        {{ form.phone_number|attr:"maxlength:13"|attr:"minlength:10"|add_class:"appearance-none block w-full pl-16 pr-10 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-center font-mono text-xl" }}
+                        
+                        <div class="absolute right-3 text-gray-400">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full py-3 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-[1.02]">
+                        Verify
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <span class="text-sm text-indigo-600">Enter a valid Bangladeshi phone number</span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+
+<script>
+// Optional: Add smooth reveal animation when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.style.opacity = '0';
+    form.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+        form.style.transition = 'all 0.5s ease-out';
+        form.style.opacity = '1';
+        form.style.transform = 'translateY(0)';
+    }, 100);
+});
+
+// Optional: Add input formatting
+document.querySelector('input[name="phone_number"]').addEventListener('input', function(e) {
+    // Remove any non-digit characters
+    let value = e.target.value.replace(/\D/g, '');
+    
+    // Format the number with spaces
+    if (value.length > 0) {
+        value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+    }
+    
+    e.target.value = value;
+});
+</script>
+
+{% endblock extra_js %}
+
+{% endblock %}

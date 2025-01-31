@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Enter Reset Code{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-2xl overflow-hidden backdrop-blur-sm bg-opacity-80">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 py-8 px-10 text-white text-center">
+            <h2 class="text-3xl font-bold tracking-tight mb-2">Enter the verification code</h2>
+        </div>
+        
+        <div class="p-10 space-y-8">
+            <p class="text-center text-gray-600">We've sent a 6-digit code to your email. Please enter it below.</p>
+
+            <!-- Verification Code Form -->
+            <form method="POST" class="space-y-6" id="verificationForm">
+                {% csrf_token %}
+                
+                <div>
+                    <!-- Code Input Container -->
+                    <div class="flex justify-center space-x-2">
+                        {% for i in "123456" %}
+                        <input type="text" 
+                               maxlength="1"
+                               class="verification-input w-12 h-12 text-center text-xl font-mono border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                               required>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="verification_code" id="combinedCode">
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p class="mt-2 text-sm text-red-600 text-center">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="w-full py-3 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-300 transition duration-300">
+                        Verify Code
+                    </button>
+                </div>
+            </form>
+
+            <!-- Return to Login -->
+            <div class="text-center">
+                <a href="{% url 'Authentication:user_login' %}" 
+                   class="text-sm text-indigo-600 hover:text-indigo-800">
+                    Return to Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('verificationForm');
+    const inputs = document.querySelectorAll('.verification-input');
+    const hiddenInput = document.getElementById('combinedCode');
+
+    // Auto-focus first input
+    inputs[0].focus();
+
+    // Handle input behavior
+    inputs.forEach((input, index) => {
+        // Only allow numbers
+        input.addEventListener('input', function(e) {
+            if (!/^\d*$/.test(e.target.value)) {
+                e.target.value = '';
+                return;
+            }
+
+            // Auto-focus next input
+            if (e.target.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+
+            // Combine all inputs
+            updateHiddenInput();
+        });
+
+        // Handle backspace
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+
+        // Handle paste
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').slice(0, 6);
+            if (!/^\d*$/.test(pastedData)) return;
+
+            // Distribute pasted numbers across inputs
+            pastedData.split('').forEach((digit, i) => {
+                if (inputs[i]) {
+                    inputs[i].value = digit;
+                    if (i < inputs.length - 1) {
+                        inputs[i + 1].focus();
+                    }
+                }
+            });
+
+            updateHiddenInput();
+        });
+    });
+
+    // Update hidden input with combined values
+    function updateHiddenInput() {
+        const code = Array.from(inputs).map(input => input.value).join('');
+        hiddenInput.value = code;
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        if (hiddenInput.value.length !== 6) {
+            e.preventDefault();
+            alert('Please enter all 6 digits of the verification code.');
+        }
+    });
+});
+</script>
+
+{% endblock extra_js %}
+{% endblock %}

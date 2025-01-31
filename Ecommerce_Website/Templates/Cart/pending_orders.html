@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Orders{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="mb-8" aria-label="Breadcrumb">
+            <ol class="flex flex-wrap items-center space-x-2 text-sm text-gray-500">
+                <li>
+                    <a href="{% url 'Products:product_list' %}" class="hover:text-blue-600 transition-colors">
+                        <span class="sr-only">Home</span>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        </svg>
+                    </a>
+                </li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-800 font-medium">Pending Orders</li>
+            </ol>
+        </nav>
+
+        <!-- Header Section -->
+        <div class="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Pending Orders</h1>
+                    <p class="mt-2 text-sm text-gray-600">Manage orders awaiting delivery</p>
+                </div>
+            </div>
+        </div>
+
+        {% if orders %}
+            <!-- Orders Grid -->
+            <div class="grid gap-6">
+                {% for order in orders %}
+                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="p-6">
+                            <div class="flex flex-wrap justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Order #{{ order.order_id }}</h3>
+                                    <p class="text-sm text-gray-500">Placed on {{ order.created_at|date:"F d, Y" }}</p>
+                                </div>
+                                <div class="mt-2 sm:mt-0">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Pending
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Order Summary -->
+                            <div class="mt-4">
+                                <div class="flex justify-between text-sm text-gray-600">
+                                    <span>Total Items:</span>
+                                    <span>{{ order.carts.count }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm font-medium text-gray-900 mt-1">
+                                    <span>Total Amount:</span>
+                                    <span><span class="text-xs"> BDT </span>{{ order.total }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="mt-6 flex flex-wrap gap-3">
+                                <a href="{% url 'Cart:details_pending_order' order_id=order.id %}" 
+                                   class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Process Order
+                                </a>
+                                <a href="{% url 'Cart:download_invoice' order_id=order.id %}" 
+                                   class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Download Invoice
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+                <h3 class="mt-4 text-lg font-medium text-gray-900">No pending orders</h3>
+                <p class="mt-2 text-sm text-gray-500">There are no orders waiting to be processed at this time.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects
+    const orderCards = document.querySelectorAll('.order-card');
+    orderCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.classList.add('transform', 'scale-[1.01]');
+        });
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('transform', 'scale-[1.01]');
+        });
+    });
+
+    // Fade in animation
+    const content = document.querySelector('.container');
+    content.style.opacity = '0';
+    content.style.transition = 'opacity 0.3s ease-in-out';
+    
+    setTimeout(() => {
+        content.style.opacity = '1';
+    }, 100);
+
+    // Smooth scroll to order details when clicking Process Order
+    const processButtons = document.querySelectorAll('[href*="details_pending_order"]');
+    processButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const href = button.getAttribute('href');
+            const targetId = href.split('#')[1];
+            if (targetId) {
+                e.preventDefault();
+                document.getElementById(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+});
+</script>
+
+{% endblock extra_js %}
+
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 py-6 px-8 text-white text-center">
+            <h2 class="text-2xl font-bold tracking-tight">Log In</h2>
+            <p class="mt-2 text-indigo-100 text-sm">Enter your credentials to access your account.</p>
+        </div>
+        <form id="loginForm" method="POST" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <div class="rounded-md bg-red-50 p-4 border border-red-200 mb-4">
+                <ul class="list-disc pl-5 text-sm text-red-700">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="space-y-4">
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    {{ form.username|attr:"class:mt-1 block w-full border rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" }}
+                </div>
+                
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+                    <div class="relative">
+                        {{ form.password|attr:"class:mt-1 block w-full border rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" }}
+                        <button type="button" onclick="togglePasswordVisibility('id_password')" 
+                                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 818 0z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+            </div>
+
+            <div>
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-300 text-white font-medium py-3 px-6 rounded-md focus:outline-none transition duration-300">
+                    Log In
+                </button>
+<<<<<<< HEAD
+                <div class="flex text-xs text-gray-500 mt-1"> 
+                    <span class="ml-auto"> 
+                        <a href="{% url 'Authentication:forgot_password' %}"> Forgot Password ? </a> 
+                    </span> 
+                </div>
+            </div>
+        </form>
+
+        <!-- Google Login Section -->
+        <div class="px-6 pb-6">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">
+                        Or continue with
+                    </span>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <a href="{% url 'social:begin' 'google-oauth2' %}" 
+                   class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+                        <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.33-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+                        <path fill="#FBBC05" d="M11.67 28.18c-.72-2.16-1.07-4.45-1.07-6.68 0-2.23.35-4.41 1.07-6.58V9.12H4.34A23.933 23.933 0 0 0 0 24c0 3.85.92 7.5 2.56 10.78l7.11-5.6z"/>
+                        <path fill="#EA4335" d="M24 9.5c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 2.91 29.93 0 24 0 15.4 0 7.96 4.93 4.34 12.22l7.33 5.7C13.42 13.37 18.27 9.5 24 9.5z"/>
+                    </svg>
+                    Continue with Google
+                </a>
+            </div>
+        </div>
+
+=======
+                <div class="flex text-xs text-gray-500 mt-1"> <span class="ml-auto"> <a href="{% url 'Authentication:forgot_password' %}"> Forgot Password ? </a> </span> </div>
+            </div>
+        </form>
+>>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+        <div class="mt-6 text-center text-sm text-gray-600 pb-6">
+            Don't have an account? <a href="{% url 'Authentication:sign_up' %}" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function togglePasswordVisibility(inputId) {
+        const input = document.getElementById(inputId);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    window.togglePasswordVisibility = togglePasswordVisibility;
+});
+</script>
+<<<<<<< HEAD
+{% endblock extra_js %}
+=======
+{% endblock extrat_js %}
+>>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+{% endblock %}

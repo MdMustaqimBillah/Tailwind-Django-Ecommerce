@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Write Review{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+        <h2 class="text-2xl font-bold text-center">Write a Review</h2>
+    </div>
+    
+    <form id="reviewForm" method="post" class="p-6 space-y-6">
+        {% csrf_token %}
+        <div id="ratingSection">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
+            <div class="flex justify-center space-x-2">
+                {% for i in "12345" %}
+                <button type="button" 
+                        data-rating="{{ i }}" 
+                        class="rating-star text-3xl transition-colors duration-200 text-gray-300 hover:text-yellow-500 focus:outline-none">
+                    ★
+                </button>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="rating" id="ratingInput" required>
+            <p id="ratingError" class="text-red-500 text-sm mt-1 hidden">Please select a rating</p>
+        </div>
+
+        <div>
+            <label for="comment" class="block text-sm font-medium text-gray-700">Review Comments</label>
+            <textarea 
+                id="comment" 
+                name="comment" 
+                rows="4" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                placeholder="Share your experience with the product"
+                maxlength="500"
+            ></textarea>
+            <div class="text-sm text-gray-500 mt-1 flex justify-between">
+                <span id="charCount">0</span>
+                <span>Max 500 characters</span>
+            </div>
+        </div>
+
+        <button 
+            type="submit" 
+            class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-md hover:from-indigo-700 hover:to-purple-700 transition-colors duration-300"
+        >
+            Submit Review
+        </button>
+    </form>
+</div>
+
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingInput = document.getElementById('ratingInput');
+    const ratingError = document.getElementById('ratingError');
+    const commentTextarea = document.getElementById('comment');
+    const charCount = document.getElementById('charCount');
+    const reviewForm = document.getElementById('reviewForm');
+
+    // Star Rating Interaction with Hover and Persist
+    ratingStars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+            const hoverRating = star.dataset.rating;
+            ratingStars.forEach((s, index) => {
+                if (index < hoverRating) {
+                    s.classList.remove('text-gray-300');
+                    s.classList.add('text-yellow-500');
+                } else {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                }
+            });
+        });
+
+        star.addEventListener('click', () => {
+            const rating = star.dataset.rating;
+            
+            // Set hidden input value
+            ratingInput.value = rating;
+            ratingError.classList.add('hidden');
+
+            // Persist selected stars
+            ratingStars.forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.remove('text-gray-300');
+                    s.classList.add('text-yellow-500');
+                } else {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                }
+            });
+        });
+    });
+
+    // Reset stars when mouse leaves star section
+    document.getElementById('ratingSection').addEventListener('mouseleave', () => {
+        if (ratingInput.value) {
+            const selectedRating = ratingInput.value;
+            ratingStars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.classList.remove('text-gray-300');
+                    s.classList.add('text-yellow-500');
+                } else {
+                    s.classList.remove('text-yellow-500');
+                    s.classList.add('text-gray-300');
+                }
+            });
+        } else {
+            ratingStars.forEach(s => {
+                s.classList.remove('text-yellow-500');
+                s.classList.add('text-gray-300');
+            });
+        }
+    });
+
+    // Character Count
+    commentTextarea.addEventListener('input', () => {
+        charCount.textContent = commentTextarea.value.length;
+    });
+
+    // Form Validation
+    reviewForm.addEventListener('submit', (e) => {
+        let isValid = true;
+
+        // Validate Rating
+        if (!ratingInput.value) {
+            ratingError.classList.remove('hidden');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+{% endblock extra_js %}
+
+{% endblock %}

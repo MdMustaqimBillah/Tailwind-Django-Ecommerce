@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-24 sm:h-32 relative">
+                {% if user.user_profile.profile_picture %}
+                    <img src="{{ user.user_profile.profile_picture.url }}" alt="Profile Image" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white absolute -bottom-12 sm:-bottom-16 left-4 sm:left-8 object-cover">
+                {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Image" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white absolute -bottom-12 sm:-bottom-16 left-4 sm:left-8 object-cover">
+                {% endif %}
+            </div>
+            <div class="pt-16 sm:pt-20 px-4 py-6 sm:px-6">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">{{ user.user_profile.first_name }} {{ user.user_profile.last_name }}</h2>
+                        <p class="text-gray-500 text-sm sm:text-base">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'Profile:profile_setup' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Profile</a>
+                    </div>
+                </div>
+
+                <div class="mt-6 border-t border-gray-200 pt-6">
+                    <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Phone Number</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ user.user_phone_number.phone_number|default:"N/A" }}</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Address</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                {{ user.user_profile.address }}<br>
+                                {{ user.user_profile.city }}, {{ user.user_profile.postal_code }}<br>
+                                {{ user.user_profile.country }}
+                            </dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Total Purchased</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ total_order }} Products</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Account Status</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                {% if user.user_phone_number.is_verified %}
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Verified</span>
+                                {% else %}
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Not Verified</span>
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div class="sm:col-span-2 mt-6">
+                            <a href="{% url 'Profile:verification' %}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Add/Verify Phone Number</a>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

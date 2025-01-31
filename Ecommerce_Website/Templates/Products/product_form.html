@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-blue-50 to-blue-300 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-indigo-600 py-6 px-8 text-white">
+                <h2 class="text-2xl font-semibold tracking-tight">Add New Product</h2>
+                <p class="mt-1 text-indigo-100">Fill in the details to list your product</p>
+            </div>
+
+            <!-- Form -->
+            <form id="productForm" class="p-8 space-y-6" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Error Messages -->
+                {% if form.errors %}
+                <div class="rounded-md bg-red-50 p-4 mb-4 border border-red-200">
+                    <ul class="list-disc pl-4 text-sm text-red-700">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Basic Info Section -->
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                        {% render_field form.name class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" placeholder="Enter product name" %}
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Category</label>
+                                <div class="flex items-center space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="categoryType" value="existing" class="form-radio text-indigo-600" checked>
+                                        <span class="ml-2">Existing Category</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="categoryType" value="new" class="form-radio text-indigo-600">
+                                        <span class="ml-2">New Category</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Existing Category Dropdown -->
+                            <div id="existingCategoryDiv">
+                                {% render_field form.category class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" %}
+                            </div>
+                            
+                            <!-- New Category Input -->
+                            <div id="newCategoryDiv" class="hidden">
+                                <input type="text" 
+                                       id="newCategory" 
+                                       name="new_category" 
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" 
+                                       placeholder="Enter new category name">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                {% render_field form.price class="pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" placeholder="0.00" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        {% render_field form.description class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3" rows="4" placeholder="Describe your product..." %}
+                        <p class="mt-1 text-sm text-gray-500" id="charCount">0/500 characters</p>
+                    </div>
+                </div>
+
+                <!-- Image Upload Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900">Product Images</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {% for field in form %}
+                            {% if 'image' in field.name %}
+                            <div class="image-upload-container">
+                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-indigo-500 transition-colors">
+                                    <input type="file" 
+                                           name="{{ field.name }}" 
+                                           id="{{ field.auto_id }}"
+                                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                           accept="image/*"
+                                           onchange="previewImage(this)">
+                                    <div class="text-center preview-container">
+                                        <div class="mx-auto h-24 w-24 text-gray-400 flex items-center justify-center">
+                                            <svg class="h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm text-gray-500">Click to upload</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Availability Toggle -->
+                <div class="flex items-center space-x-3">
+                    <label for="availability" class="text-sm font-medium text-gray-700">Product Availability</label>
+                    {% render_field form.availability class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit" class="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        List Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+
+<script>
+// Character counter for description
+document.getElementById('id_description').addEventListener('input', function() {
+    const maxLength = 500;
+    const currentLength = this.value.length;
+    document.getElementById('charCount').textContent = `${currentLength}/${maxLength} characters`;
+    
+    if (currentLength > maxLength) {
+        this.value = this.value.substring(0, maxLength);
+    }
+});
+
+// Category type switcher
+document.querySelectorAll('input[name="categoryType"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const existingDiv = document.getElementById('existingCategoryDiv');
+        const newDiv = document.getElementById('newCategoryDiv');
+        const categorySelect = document.getElementById('id_category');
+        const newCategoryInput = document.getElementById('newCategory');
+        
+        if (this.value === 'existing') {
+            existingDiv.classList.remove('hidden');
+            newDiv.classList.add('hidden');
+            categorySelect.required = true;
+            newCategoryInput.required = false;
+            newCategoryInput.value = '';
+        } else {
+            existingDiv.classList.add('hidden');
+            newDiv.classList.remove('hidden');
+            categorySelect.required = false;
+            newCategoryInput.required = true;
+            categorySelect.selectedIndex = 0;
+        }
+    });
+});
+
+// Image preview functionality
+function previewImage(input) {
+    const container = input.closest('.image-upload-container');
+    const previewContainer = container.querySelector('.preview-container');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewContainer.innerHTML = `
+                <div class="relative h-24 w-24 mx-auto">
+                    <img src="${e.target.result}" class="h-full w-full object-cover rounded" />
+                    <button type="button" 
+                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
+                            onclick="removeImage(this)">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Remove image preview
+function removeImage(button) {
+    const container = button.closest('.image-upload-container');
+    const input = container.querySelector('input[type="file"]');
+    const previewContainer = container.querySelector('.preview-container');
+    
+    input.value = '';
+    previewContainer.innerHTML = `
+        <div class="mx-auto h-24 w-24 text-gray-400 flex items-center justify-center">
+            <svg class="h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Click to upload</p>
+    `;
+}
+
+// Enhanced form validation
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('id_name').value;
+    const price = document.getElementById('id_price').value;
+    const description = document.getElementById('id_description').value;
+    const categoryType = document.querySelector('input[name="categoryType"]:checked').value;
+    const existingCategory = document.getElementById('id_category').value;
+    const newCategory = document.getElementById('newCategory').value;
+    
+    let isValid = true;
+    const errors = [];
+
+    if (!name.trim()) {
+        errors.push('Product name is required');
+        isValid = false;
+    }
+
+    if (!price || parseFloat(price) <= 0) {
+        errors.push('Please enter a valid price');
+        isValid = false;
+    }
+
+    if (!description.trim()) {
+        errors.push('Product description is required');
+        isValid = false;
+    }
+
+    if (categoryType === 'existing' && !existingCategory) {
+        errors.push('Please select a category');
+        isValid = false;
+    }
+
+    if (categoryType === 'new' && !newCategory.trim()) {
+        errors.push('Please enter a new category name');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+        alert(errors.join('\n'));
+    }
+});
+</script>
+{% endblock extra_js %}
+{% endblock %}

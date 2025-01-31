@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Technovate Solutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 10px auto;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .company-header {
+            text-align: center;
+        }
+        
+        .company-header h1 {
+            color: #050505;
+            padding-top: 0px;
+            margin-top: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+            font-size: 1.5rem;
+        }
+        
+        .company-header h3 {
+            color: #1e40af;
+            padding-top: 0px;
+            margin-top: 0px;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+            font-size: 1rem;
+        }
+
+        .company-header p {
+            color: #4b5563;
+            padding-top: 0px;
+            margin-top: 0px;
+            font-size: 0.8rem;
+        }
+
+        .order-details-table, .info-table, .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .order-details-table th, .order-details-table td,
+        .info-table th, .info-table td,
+        .product-table th, .product-table td {
+            border: 1px solid #d1d5db;
+            padding: 5px;
+            font-size: 0.9rem;
+        }
+
+        .order-details-table th, 
+        .info-table th, 
+        .product-table th {
+            background-color: #f3f4f6;
+            text-align: left;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .summary-table {
+            width: 250px;
+            border-collapse: collapse;
+        }
+
+        .summary-table td {
+            padding: 5px;
+            border: 1px solid #d1d5db;
+        }
+
+        .total-row {
+            font-weight: bold;
+        }
+
+        @media print {
+            @page { margin: 1cm; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="company-header">
+            <h1> Invoice </h1>
+            <h3> TECHNOVATE SOLUTIONS</h3>
+            <p>Chasara, Fatullah-1421, Narayanganj</p>
+        </div>
+
+        <table class="order-details-table">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Order Date</th>
+                    <th>Payment ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ order.created_at|date:"F d, Y" }}</td>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.payment_id }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th>Customer Information</th>
+                    <th>Shipping Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Name:</strong> {{ order.user.user_profile.first_name }} {{ order.user.user_profile.last_name }}<br>
+                        <strong>Email:</strong> {{ order.user.email }}<br>
+                        <strong>Mobile:</strong> {{ order.user.user_phone_number.phone_number }}<br>
+                        <strong>Address:</strong> {{ order.user.user_profile.address }}<br>
+                        {{ order.user.user_profile.city }}, {{ order.user.user_profile.postal_code }}<br>
+                        {{ order.user.user_profile.country }}
+                    </td>
+                    <td>
+                        {{ billing_address.address }}<br>
+                        {{ billing_address.city }}-{{ billing_address.zip_code }}<br>
+                        {{ billing_address.country }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cart_item in cart_items %}
+                <tr>
+                    <td>{{ cart_item.products.name }}</td>
+                    <td>{{ cart_item.quantity }}</td>
+                    <td>BDT {{ cart_item.products.price|floatformat:2 }}</td>
+                    <td>BDT {{ cart_item.total|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <table class="summary-table">
+                <tr>
+                    <td>Subtotal</td>
+                    <td>BDT {{ subtotal }}</td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td>BDT {{ shipping }}</td>
+                </tr>
+                <tr class="total-row">
+                    <td>Total</td>
+                    <td>BDT {{ total }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="text-align: center; margin-top: 10px; font-size: 0.8rem;">
+            © 2024 Technovate Solutions
+        </div>
+    </div>
+</body>
+</html>
