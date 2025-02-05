@@ -102,18 +102,18 @@
             <h3> TECHNOVATE SOLUTIONS</h3>
             <p>Chasara, Fatullah-1421, Narayanganj</p>
         </div>
-
+        <div style="font-size: 0.9rem; margin-bottom: 0; padding-bottom: 0;">{{ order.created_at|date:"F d, Y" }}</div>
         <table class="order-details-table">
             <thead>
                 <tr>
                     <th>Invoice Number</th>
-                    <th>Order Date</th>
+                    <th>Order ID</th>
                     <th>Payment ID</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ order.created_at|date:"F d, Y" }}</td>
+                    <td> O{{order.id}}b{{billing_address.id}} </td>
                     <td>{{ order.order_id }}</td>
                     <td>{{ order.payment_id }}</td>
                 </tr>

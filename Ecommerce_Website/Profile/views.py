@@ -13,7 +13,7 @@ from django.utils import timezone
 @login_required
 def profile(request):
     user=request.user
-    profile = Profile.objects.get(user=request.user)
+    profile = Profile.objects.filter(user=user)
     if user.is_superuser:
         total_order = TotalOrder.objects.first()
         total_order = total_order.count if total_order else 0

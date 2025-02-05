@@ -11,7 +11,7 @@ class UserProfileForm(forms.ModelForm):
     profile_picture = forms.ImageField(label='Avatar',required=False)
     class Meta:
         model = Profile
-        fields = ['country', 'city', 'address','postal_code','profile_picture']
+        fields = ['country', 'city', 'address','address2','postal_code','profile_picture']
 
 class PhoneNumberForm(forms.ModelForm):
     phone_number = PhoneNumberField(max_length=15)

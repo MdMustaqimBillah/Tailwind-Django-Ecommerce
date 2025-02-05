@@ -33,7 +33,7 @@
                         <div class="flex-1 min-w-0">
                             <h3 class="text-lg font-medium text-gray-900">{{ item.products.name }}</h3>
                             <p class="mt-1 text-sm text-gray-500">Category: {{ item.products.category.name }}</p>
-                            <p class="mt-1 text-sm font-medium text-gray-900">${{ item.products.price }}</p>
+                            <p class="mt-1 text-sm font-medium text-gray-900">BDT {{ item.products.price }}</p>
                         </div>
 
                         <!-- Quantity Controls -->
@@ -75,20 +75,21 @@
                 <div class="space-y-3">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Subtotal</span>
-                        <span class="font-medium">${{ subtotal }}</span>
+                        <span><span class="font-medium"> {{ subtotal }}</span></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Shipping</span>
-                        <span class="font-medium">${{ shipping }}</span>
+                        <span><span class="font-medium"> {{ shipping }}</span></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Tax</span>
-                        <span class="font-medium">${{ tax }}</span>
+                        <span> <span class="font-medium"> {{ tax }}</span></span>
                     </div>
                     <div class="border-t pt-3">
                         <div class="flex justify-between items-center">
                             <span class="text-lg font-medium text-gray-900">Total</span>
-                            <span class="text-xl font-bold text-gray-900">${{ total }}</span>
+                            <span><span class="text-lg font-medium"> BDT   </span>  <span class="text-xl font-bold text-gray-900"> {{ total }}</span></span>
+
                         </div>
                     </div>
                 </div>

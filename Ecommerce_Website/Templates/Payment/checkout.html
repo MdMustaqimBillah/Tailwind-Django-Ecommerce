@@ -77,7 +77,7 @@
                         <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
                         <input 
                             name="address" 
-                            value="{{ user.user_profile.address }}" 
+                            value="{% if user.user_profile.address %}{{ user.user_profile.address }}{% endif %}, {% if user.user_profile.address2 %}&#10;{{ user.user_profile.address2 }}{% endif %}" 
                             class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                             placeholder="Enter your street address"
                             required

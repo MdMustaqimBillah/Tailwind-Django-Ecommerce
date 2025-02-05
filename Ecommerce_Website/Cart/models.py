@@ -29,8 +29,8 @@ class Order(models.Model):
     delivered= models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    order_id = models.CharField(max_length=264, null=True, blank=True)
-    payment_id = models.CharField(max_length=264, null=True, blank=True)
+    order_id = models.CharField( max_length=1024, null=True, blank=True)
+    payment_id = models.CharField( max_length=1024, null=True, blank=True)
 
     def __str__(self):
         return f"Order for {self.user.email}"

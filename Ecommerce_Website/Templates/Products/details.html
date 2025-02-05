@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
-
+{% load widget_tweaks %}
 {% block title %}{{ product.name }} - Product Details{% endblock %}
 
 {% block content %}
-<<<<<<< HEAD
+
 <div class="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
-    <!-- Refined Breadcrumb with hover effects -->
-    <nav class="mb-8" aria-label="Breadcrumb">
-        <ol class="flex items-center flex-wrap text-sm">
+    <!-- Enhanced Breadcrumb with animation -->
+    <nav class="mb-8 overflow-x-auto whitespace-nowrap" aria-label="Breadcrumb">
+        <ol class="flex items-center text-sm">
             <li class="flex items-center">
-                <a href="{% url 'Products:product_list' %}" class="text-gray-600 hover:text-blue-600 transition-colors">Home</a>
+                <a href="{% url 'Products:product_list' %}" class="text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-105">Home</a>
                 <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                 </svg>
             </li>
             <li class="flex items-center">
-                <a href="{% url 'Products:product_list' product.category.slug %}" class="text-gray-600 hover:text-blue-600 transition-colors">{{ product.category.name }}</a>
+                <a href="{% url 'Products:product_list' product.category.slug %}" class="text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-105">{{ product.category.name }}</a>
                 <svg class="w-4 h-4 mx-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                 </svg>
@@ -23,119 +23,61 @@
             <li class="text-gray-800 font-medium truncate">{{ product.name }}</li>
         </ol>
     </nav>
-
-    <!-- Main Product Grid with improved spacing -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
-        <!-- Enhanced Image Gallery Section -->
+        <!-- Improved Image Gallery Section with Zoom Effect -->
         <div class="space-y-6">
-            <!-- Main Image with improved container -->
-            <div class="relative rounded-2xl overflow-hidden bg-white shadow-lg border border-gray-100">
-                <div class="aspect-square h-[32rem] relative group">
+            <div class="relative rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 group">
+                <div class="aspect-square h-[32rem] relative overflow-hidden">
                     <img 
                         id="mainImage"
                         src="{% if product.image %}{{ product.image.url }}{% endif %}"
                         alt="{{ product.name }}"
-                        class="absolute w-full h-full object-contain p-6 transition-all duration-300 group-hover:scale-105"
+                        class="absolute w-full h-full object-contain p-6 transition-all duration-500 transform group-hover:scale-110"
                     >
                     {% if not product.image %}
                         <div class="absolute inset-0 flex items-center justify-center bg-gray-50">
                             <span class="text-gray-400 text-sm">No image available</span>
                         </div>
                     {% endif %}
+                    <!-- Zoom lens overlay -->
+                    <div id="zoomLens" class="hidden absolute border-2 border-blue-400 bg-white bg-opacity-20 pointer-events-none"></div>
                 </div>
             </div>
-
-            <!-- Enhanced Thumbnail Gallery -->
             <div class="grid grid-cols-4 gap-4">
                 {% if product.image %}
-                <div class="aspect-square rounded-xl overflow-hidden bg-white cursor-pointer transition-all hover:shadow-md thumbnail border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image.url }}', this)">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform hover:scale-110">
+                <div class="aspect-square rounded-2xl overflow-hidden bg-white cursor-pointer transition-all duration-300 hover:shadow-xl thumbnail border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-1" 
+                     onclick="changeImage('{{ product.image.url }}', this)">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform duration-300 hover:scale-110">
                 </div>
                 {% endif %}
                 
                 {% if product.image2 %}
-                <div class="aspect-square rounded-xl overflow-hidden bg-white cursor-pointer transition-all hover:shadow-md thumbnail border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image2.url }}', this)">
-                    <img src="{{ product.image2.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform hover:scale-110">
+                <div class="aspect-square rounded-2xl overflow-hidden bg-white cursor-pointer transition-all duration-300 hover:shadow-xl thumbnail border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-1" 
+                     onclick="changeImage('{{ product.image2.url }}', this)">
+                    <img src="{{ product.image2.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform duration-300 hover:scale-110">
                 </div>
                 {% endif %}
                 
                 {% if product.image3 %}
-                <div class="aspect-square rounded-xl overflow-hidden bg-white cursor-pointer transition-all hover:shadow-md thumbnail border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image3.url }}', this)">
-                    <img src="{{ product.image3.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform hover:scale-110">
+                <div class="aspect-square rounded-2xl overflow-hidden bg-white cursor-pointer transition-all duration-300 hover:shadow-xl thumbnail border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-1" 
+                     onclick="changeImage('{{ product.image3.url }}', this)">
+                    <img src="{{ product.image3.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform duration-300 hover:scale-110">
                 </div>
                 {% endif %}
                 
                 {% if product.image4 %}
-                <div class="aspect-square rounded-xl overflow-hidden bg-white cursor-pointer transition-all hover:shadow-md thumbnail border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image4.url }}', this)">
-                    <img src="{{ product.image4.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform hover:scale-110">
-                </div>
-=======
-<div class="container mx-auto px-4 py-8">
-    <!-- Breadcrumb Navigation (unchanged) -->
-    <nav class="mb-8">
-        <ol class="flex items-center space-x-2 text-sm text-gray-500">
-            <li><a href="{% url 'Products:product_list' %}" class="hover:text-blue-600">Home</a></li>
-            <li><span class="mx-2">/</span></li>
-            <li><a href="{% url 'Products:product_list' product.category.slug %}" class="hover:text-blue-600">{{ product.category.name }}</a></li>
-            <li><span class="mx-2">/</span></li>
-            <li class="text-gray-800 font-medium">{{ product.name }}</li>
-        </ol>
-    </nav>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Enhanced Product Image Gallery -->
-        <div class="space-y-4">
-            <!-- Main Image Display -->
-            <div class="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                <img 
-                    id="mainImage"
-                    src="{% if product.image %}{{ product.image.url }}{% endif %}"
-                    alt="{{ product.name }}"
-                    class="w-full h-full object-cover transition-opacity duration-300"
-                >
-                {% if not product.image %}
-                    <div class="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <span>No image available</span>
-                    </div>
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
-                {% endif %}
-            </div>
-
-            <!-- Thumbnail Gallery -->
-            <div class="grid grid-cols-4 gap-2">
-                {% if product.image %}
-                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:opacity-75 transition-opacity border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image.url }}', this)">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
-                </div>
-                {% endif %}
-                
-                {% if product.image2 %}
-                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:opacity-75 transition-opacity border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image2.url }}', this)">
-                    <img src="{{ product.image2.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
-                </div>
-                {% endif %}
-                
-                {% if product.image3 %}
-                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:opacity-75 transition-opacity border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image3.url }}', this)">
-                    <img src="{{ product.image3.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
-                </div>
-                {% endif %}
-                
-                {% if product.image4 %}
-                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:opacity-75 transition-opacity border-2 border-transparent hover:border-blue-500" onclick="changeImage('{{ product.image4.url }}', this)">
-                    <img src="{{ product.image4.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                <div class="aspect-square rounded-2xl overflow-hidden bg-white cursor-pointer transition-all duration-300 hover:shadow-xl thumbnail border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-1" 
+                     onclick="changeImage('{{ product.image4.url }}', this)">
+                    <img src="{{ product.image4.url }}" alt="{{ product.name }}" class="w-full h-full object-contain p-3 transition-transform duration-300 hover:scale-110">
                 </div>
                 {% endif %}
             </div>
         </div>
-
-<<<<<<< HEAD
-        <!-- Enhanced Product Info Section -->
         <div class="flex flex-col space-y-8">
-            <!-- Improved Header Section -->
+            <!-- Improved Header Section with Animation -->
             <div class="space-y-4">
-                <div class="flex flex-col space-y-2">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{{ product.name }}</h1>
+                <div class="animate-fade-in">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-2">{{ product.name }}</h1>
                     <div class="flex items-center space-x-2 text-sm text-gray-600">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
@@ -143,14 +85,12 @@
                         <span>Added by {{ product.user.username }} on {{ product.created_at|date:"F d, Y" }}</span>
                     </div>
                 </div>
-
-                <!-- Enhanced Rating Display -->
-                <div class="flex items-center space-x-6 bg-gray-50 p-4 rounded-xl">
+                <div class="flex items-center space-x-6 bg-gradient-to-r from-gray-50 to-white p-4 rounded-2xl shadow-sm animate-fade-in">
                     <div class="flex items-center space-x-2">
-                        <div class="star-rating flex">
+                        <div class="star-rating flex animate-pulse">
                             {% for i in "12345" %}
                                 {% if forloop.counter <= rates %}
-                                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-5 h-5 text-yellow-400 transition-all duration-300 transform hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"/>
                                     </svg>
                                 {% else %}
@@ -166,30 +106,14 @@
                     <span class="text-sm text-gray-600">{{ reviewer }} reviews</span>
                 </div>
             </div>
-
-            <!-- Enhanced Price and Availability Section -->
             <div class="space-y-6">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm">
                     <div class="flex items-baseline space-x-2">
                         <span class="text-lg font-semibold text-gray-500">BDT</span>
-                        <span class="text-4xl font-bold text-gray-900">{{ product.price }}</span>
+                        <span class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">{{ product.price }}</span>
                     </div>
-=======
-        <!-- Product Info (rest of the content remains the same) -->
-        <div class="flex flex-col space-y-6">
-            <!-- Basic Info -->
-            <div class="space-y-2">
-                <h1 class="text-3xl font-bold text-gray-900">{{ product.name }}</h1>
-                <p class="text-sm text-gray-500">Added by {{ product.user.username }} on {{ product.created_at|date:"F d, Y" }}</p>
-            </div>
-
-            <!-- Price and Availability -->
-            <div class="space-y-4">
-                <div class="flex items-center">
-                    <span class="text-xl font-semibold text-gray-900 pr-2">BDT </span> <span class="text-3xl font-bold text-gray-900"> {{ product.price }}</span>
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
                     {% if product.availability %}
-                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800 animate-pulse">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
@@ -204,119 +128,87 @@
                         </span>
                     {% endif %}
                 </div>
-
-<<<<<<< HEAD
-                <!-- Product Description -->
-                <div class="prose prose-sm text-gray-600 max-w-none bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-=======
-                <!-- Average Stars Display -->
-                <div id="average-stars" class="flex items-center mt-2">
-                    <div class="star-rating flex">
-                         {% for i in "12345" %}
-                            {% if forloop.counter <= rates %}
-                                <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-                                </svg>
-                            {% else %}
-                                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-                                </svg>
-                            {% endif %}
-                        {% endfor %}
-                        <span class="my-auto py-auto text-sm ml-1">  ({{ rate }}) </span>
+                <div class="prose prose-sm text-gray-600 max-w-none bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div class="prose prose-sm text-gray-500">
+                        {{ product.description|linebreaks }}
                     </div>
-                    <span class="ml-2 text-sm text-gray-500">({{ reviewer }} reviews)</span>
                 </div>
-
-                <div class="prose prose-sm text-gray-500">
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
-                    {{ product.description|linebreaks }}
-                </div>
-            </div>
-
-            <!-- Improved Quantity Selector -->
-            <div class="flex items-center space-x-6">
-                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <div class="flex items-center border border-gray-300 rounded-lg shadow-sm bg-white">
-                    <button 
-                        type="button"
-                        class="p-3 hover:bg-gray-50 text-gray-600 transition-colors rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
-                        onclick="decrementQuantity()"
-                    >
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                    <input 
-                        type="number" 
-                        id="quantity" 
-                        name="quantity" 
-                        class="w-20 text-center border-x border-gray-300 focus:ring-0 focus:outline-none py-3" 
-                        value="1" 
-                        min="1"
-                        {% if not product.availability %}disabled{% endif %}
-                    >
-                    <button 
-                        type="button"
-                        class="p-3 hover:bg-gray-50 text-gray-600 transition-colors rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
-                        onclick="incrementQuantity()"
-                    >
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Enhanced Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                <form method="POST" action="{% url 'Cart:add_to_cart' product.id %}" class="flex-1">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" id="cart-quantity">
-                    <button type="submit" 
-                            onclick="document.getElementById('cart-quantity').value = document.getElementById('quantity').value"
-                            class="w-full bg-blue-600 text-white px-6 py-4 rounded-xl font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center space-x-3"
-                            {% if not product.availability %}disabled{% endif %}>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        <span>Add to Cart</span>
-                    </button>
-                </form>
-                
-                <form method="POST" action="{% url 'Cart:buy_now' product.id %}" class="flex-1">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" id="buy-quantity">
-                    <button type="submit"
-                            onclick="document.getElementById('buy-quantity').value = document.getElementById('quantity').value"
-                            class="w-full bg-gray-100 text-gray-900 px-6 py-4 rounded-xl font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all border disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center space-x-3"
-                            {% if not product.availability %}disabled{% endif %}>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <span>Buy Now</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Enhanced Product Details Grid -->
-            <div class="border-t border-gray-200 pt-8">
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="bg-gray-50 p-5 rounded-xl hover:bg-gray-100 transition-colors">
-                        <dt class="text-sm font-medium text-gray-500">Category</dt>
-                        <dd class="mt-2 text-sm font-medium text-gray-900">{{ product.category.name }}</dd>
+                <div class="flex items-center space-x-6">
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                    <div class="flex items-center border border-gray-300 rounded-2xl shadow-sm bg-white overflow-hidden">
+                        <button 
+                            type="button"
+                            class="p-3 hover:bg-gray-50 text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
+                            onclick="decrementQuantity()"
+                        >
+                            <svg class="w-4 h-4 transform transition-transform duration-200 hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <input 
+                            type="number" 
+                            id="quantity" 
+                            name="quantity" 
+                            class="w-20 text-center border-x border-gray-300 focus:ring-0 focus:outline-none py-3 transition-all duration-200" 
+                            value="1" 
+                            min="1"
+                            {% if not product.availability %}disabled{% endif %}
+                        >
+                        <button 
+                            type="button"
+                            class="p-3 hover:bg-gray-50 text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" 
+                            onclick="incrementQuantity()"
+                        >
+                            <svg class="w-4 h-4 transform transition-transform duration-200 hover:scale-110" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="bg-gray-50 p-5 rounded-xl hover:bg-gray-100 transition-colors">
-                        <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
-                        <dd class="mt-2 text-sm font-medium text-gray-900">{{ product.updated_at|date:"F d, Y" }}</dd>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <form method="POST" action="{% url 'Cart:add_to_cart' product.id %}" class="flex-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" id="cart-quantity">
+                        <button type="submit" 
+                                onclick="document.getElementById('cart-quantity').value = document.getElementById('quantity').value"
+                                class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 rounded-2xl font-medium hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center space-x-3 transform hover:-translate-y-0.5"
+                                {% if not product.availability %}disabled{% endif %}>
+                            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            <span>Add to Cart</span>
+                        </button>
+                    </form>
+                    
+                    <form method="POST" action="{% url 'Cart:buy_now' product.id %}" class="flex-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" id="buy-quantity">
+                        <button type="submit"
+                                onclick="document.getElementById('buy-quantity').value = document.getElementById('quantity').value"
+                                class="w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 px-6 py-4 rounded-2xl font-medium hover:from-gray-200 hover:to-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 border disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center space-x-3 transform hover:-translate-y-0.5"
+                                {% if not product.availability %}disabled{% endif %}>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            <span>Buy Now</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="border-t border-gray-200 pt-8">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-gray-50 to-white p-5 rounded-2xl hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <dt class="text-sm font-medium text-gray-500">Category</dt>
+                            <dd class="mt-2 text-sm font-medium text-gray-900">{{ product.category.name }}</dd>
+                        </div>
+                        <div class="bg-gradient-to-br from-gray-50 to-white p-5 rounded-2xl hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                            <dd class="mt-2 text-sm font-medium text-gray-900">{{ product.updated_at|date:"F d, Y" }}</dd>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-<<<<<<< HEAD
-    <!-- Enhanced Reviews Section -->
     <div class="border-t border-gray-200 pt-12 mt-12">
         <div class="flex items-center justify-between mb-8">
             <h2 class="text-2xl font-bold text-gray-900">Customer Reviews</h2>
@@ -331,10 +223,10 @@
         {% if reviews %}
             <div class="grid gap-6 md:grid-cols-2">
                 {% for review in reviews %}
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:border-gray-200 transition-all hover:shadow-md">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-4">
-                                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center transform hover:rotate-12 transition-transform duration-300">
                                     <span class="text-blue-600 font-medium text-base">
                                         {{ review.user.user_profile.first_name|slice:":1" }}{{ review.user.user_profile.last_name|slice:":1" }}
                                     </span>
@@ -349,131 +241,66 @@
                             <div class="star-rating flex">
                                 {% for i in "12345" %}
                                     {% if forloop.counter <= review.rating %}
-                                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-5 h-5 text-yellow-400 transform hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"/>
                                         </svg>
                                     {% else %}
                                         <svg class="w-5 h-5 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"/>
-=======
-    <!-- Reviews Section -->
-    <div class="mt-12 border-t border-gray-200 pt-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
-        {% if reviews %}
-            <div class="space-y-6">
-                {% for review in reviews %}
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <div class="flex items-center mb-4">
-                            <div class="star-rating flex mr-4">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= review.rating %}
-                                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-                                        </svg>
-                                    {% else %}
-                                        <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
                                         </svg>
                                     {% endif %}
                                 {% endfor %}
                             </div>
-<<<<<<< HEAD
                         </div>
                         <p class="text-gray-700">{{ review.comment }}</p>
-=======
-                            <span class="text-sm text-gray-500">{{ review.created_at|date:"F d, Y" }}</span>
-                        </div>
-                        <p class="text-gray-900">{{ review.comment }}</p>
-                        <p class="text-sm text-gray-500 mt-2">By : {{ review.user.user_profile.first_name }} {{ review.user.user_profile.last_name }} </p>
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-<<<<<<< HEAD
-            <div class="text-center py-16 bg-gray-50 rounded-xl border border-gray-100">
-                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center py-16 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
+                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                 </svg>
                 <p class="text-gray-600 font-medium">No reviews yet. Be the first to review this product!</p>
             </div>
-=======
-            <p class="text-gray-500">No reviews yet.</p>
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
         {% endif %}
     </div>
 </div>
-
-<<<<<<< HEAD
-<!-- Enhanced JavaScript for Image Gallery and Quantity Controls -->
-=======
-<!-- JavaScript for Quantity Manipulation -->
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
 {% block extra_js %}
 <script>
     let currentlySelected = null;
     
     function changeImage(imageUrl, thumbnailElement) {
-<<<<<<< HEAD
         const mainImage = document.getElementById('mainImage');
-        
-        // Enhanced transition effects
         mainImage.style.opacity = '0';
         mainImage.style.transform = 'scale(0.95)';
-=======
-        // Update main image
-        const mainImage = document.getElementById('mainImage');
-        
-        // Add fade effect
-        mainImage.style.opacity = '0';
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
         
         setTimeout(() => {
             mainImage.src = imageUrl;
             mainImage.style.opacity = '1';
-<<<<<<< HEAD
             mainImage.style.transform = 'scale(1)';
         }, 200);
-    
-        // Update thumbnail styling
         if (currentlySelected) {
-            currentlySelected.classList.remove('border-blue-500', 'shadow-md');
+            currentlySelected.classList.remove('border-blue-500', 'shadow-md', 'scale-105');
             currentlySelected.classList.add('border-transparent');
         }
         
         thumbnailElement.classList.remove('border-transparent');
-        thumbnailElement.classList.add('border-blue-500', 'shadow-md');
-=======
-        }, 300);
-    
-        // Update thumbnail styling
-        if (currentlySelected) {
-            currentlySelected.classList.remove('border-blue-500');
-            currentlySelected.classList.add('border-transparent');
-        }
-        thumbnailElement.classList.remove('border-transparent');
-        thumbnailElement.classList.add('border-blue-500');
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+        thumbnailElement.classList.add('border-blue-500', 'shadow-md', 'scale-105');
         currentlySelected = thumbnailElement;
     }
     
     function incrementQuantity() {
         const input = document.getElementById('quantity');
         if (!input.disabled) {
-<<<<<<< HEAD
             const currentValue = parseInt(input.value) || 1;
             input.value = currentValue + 1;
             updateQuantityStyle(input);
-=======
-            input.value = parseInt(input.value) + 1;
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
         }
     }
     
     function decrementQuantity() {
         const input = document.getElementById('quantity');
-<<<<<<< HEAD
         if (!input.disabled) {
             const currentValue = parseInt(input.value) || 2;
             if (currentValue > 1) {
@@ -492,52 +319,73 @@
             input.style.backgroundColor = '#ffffff';
         }, 150);
     }
-    
-    // Initialize functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        // Select first thumbnail
-=======
-        if (!input.disabled && parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
+    function initializeZoom() {
+        const mainImageContainer = document.querySelector('.aspect-square');
+        const mainImage = document.getElementById('mainImage');
+        const zoomLens = document.getElementById('zoomLens');
+        
+        if (!mainImageContainer || !mainImage || !zoomLens) return;
+
+        const ZOOM_LEVEL = 2;
+        
+        mainImageContainer.addEventListener('mouseenter', () => {
+            zoomLens.style.display = 'block';
+        });
+
+        mainImageContainer.addEventListener('mouseleave', () => {
+            zoomLens.style.display = 'none';
+        });
+
+        mainImageContainer.addEventListener('mousemove', (e) => {
+            const rect = mainImageContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const lensSize = 100;
+            const lensHalf = lensSize / 2;
+            zoomLens.style.left = `${x - lensHalf}px`;
+            zoomLens.style.top = `${y - lensHalf}px`;
+            zoomLens.style.width = `${lensSize}px`;
+            zoomLens.style.height = `${lensSize}px`;
+            
+            // Calculate background position for zoom effect
+            const imageRect = mainImage.getBoundingClientRect();
+            const xPercentage = (x / imageRect.width) * 100;
+            const yPercentage = (y / imageRect.height) * 100;
+            
+            mainImage.style.transformOrigin = `${xPercentage}% ${yPercentage}%`;
+            mainImage.style.transform = `scale(${ZOOM_LEVEL})`;
+        });
+
+        mainImage.addEventListener('load', () => {
+            // Reset any transform when image changes
+            mainImage.style.transform = 'none';
+        });
     }
-    
-    // Initialize the first thumbnail as selected
-    document.addEventListener('DOMContentLoaded', function() {
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
+
+    // Initialize zoom functionality when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeZoom();
+        
+        // Initialize first thumbnail as selected if it exists
         const firstThumbnail = document.querySelector('.thumbnail');
         if (firstThumbnail) {
-            changeImage(firstThumbnail.querySelector('img').src, firstThumbnail);
+            firstThumbnail.classList.add('border-blue-500', 'shadow-md', 'scale-105');
+            currentlySelected = firstThumbnail;
         }
-<<<<<<< HEAD
-
-        // Enhanced quantity input handling
+        
+        // Add input event listener for quantity validation
         const quantityInput = document.getElementById('quantity');
         if (quantityInput) {
-            quantityInput.addEventListener('change', function() {
-                const value = parseInt(this.value) || 1;
-                this.value = Math.max(1, value);
-                updateQuantityStyle(this);
-            });
-
-            quantityInput.addEventListener('keypress', function(e) {
-                if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
+            quantityInput.addEventListener('input', (e) => {
+                let value = parseInt(e.target.value);
+                if (isNaN(value) || value < 1) {
+                    e.target.value = 1;
                 }
-            });
-
-            quantityInput.addEventListener('blur', function() {
-                if (!this.value || this.value === '0') {
-                    this.value = 1;
-                    updateQuantityStyle(this);
-                }
+                updateQuantityStyle(e.target);
             });
         }
     });
 </script>
-=======
-    });
-    </script>
->>>>>>> 83888de003a35c14327b7398ac5ce59784ba1059
 {% endblock extra_js %}
 {% endblock %}

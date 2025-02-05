@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Cart.models import Cart, Order
+from Profile.models import Profile
 from .forms import OrderForm
 from Products.models import Product
 from Profile.models import PhoneNumber
@@ -17,8 +18,8 @@ def user_cart(request):
     user=request.user
     cart_items = Cart.objects.filter(user=user, purchased=False)
     subtotal = sum(float(item.total()) for item in cart_items)
-    shipping = len(cart_items)*65
-    tax= float(subtotal *.15)
+    shipping = len(cart_items)*0
+    tax= float(subtotal *0)
     total = subtotal +  shipping + tax
     
     context = {
@@ -96,6 +97,19 @@ def proceed_to_checkout(request, product_id=None):
     if not phone_number.first().is_verified:
         messages.error(request, 'Please verify your phone number to proceed')
         return redirect('Profile:resend_code')
+    
+    try:
+        profile = request.user.user_profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
+    
+    if not request.user.user_profile.is_name_added():
+        messages.error(request, 'Please add your name in your profile first.')
+        return redirect('Profile:change_name')
+    
+    if not request.user.user_profile.is_fully_filled():
+        messages.error(request, 'Please complete your profile details first to make your order.')
+        return redirect('Profile:profile_setup')
 
     # Handling direct product purchase (buy now)
     if product_id:
@@ -114,7 +128,6 @@ def proceed_to_checkout(request, product_id=None):
         )
         order.carts.add(cart_item)
         
-        order.order_id = f"TEMP-{order.id}-{order.created_at.strftime('%Y%m%d')}"
         order.save()
         
         return redirect('Payment:checkout', order_id=order.id)
@@ -215,8 +228,7 @@ def download_invoice(request, order_id):
         try:
             billing_address = BillingAddress.objects.get(user=customer, order=order)
             subtotal = sum(float(cart.total()) for cart in order.carts.all())
-            shipping = len(order.carts.all()) * 0
-            total = subtotal + shipping
+            total = subtotal
         except BillingAddress.DoesNotExist:
             messages.error(request,'Please fill your billing address and update your profile.')
         except Exception as e:
@@ -226,12 +238,12 @@ def download_invoice(request, order_id):
 
     
     template_path = 'Cart/invoice_template.html'
+
     context = {
         'order': order,
         'cart_items': order.carts.all(),
         'billing_address': billing_address,
         'subtotal': format(subtotal, '.2f'),
-        'shipping': format(shipping, '.2f'),
         'total': format(total, '.2f'),
     }
 
@@ -310,15 +322,3 @@ def detail_pending_order(request,order_id):
                }
 
     return render(request, 'Cart/detail_pending_order.html', context=context)
-
-
-@login_required
-def invoice_for_admins(request, order_id):
-    if not (request.user.is_staff or request.user.is_superuser):
-        messages.error(request, 'Access denied! Admin and staff permission only.')
-        return redirect('product_list')
-
-    order = Order.objects.get(pk=order_id)
-    customer = order.user
-    address = BillingAddress.objects.get(order=order, user=customer)
-    pass
