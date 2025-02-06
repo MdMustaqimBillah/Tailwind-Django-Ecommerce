@@ -23,13 +23,12 @@ def checkout(request, order_id):
     
     if request.method == 'POST':
         # Remove the commas that were creating tuples
-        payment_method = request.POST.get('payment_method')
         address = request.POST.get('address')        
         city = request.POST.get('city')             
         country = request.POST.get('country')       
         zip_code = request.POST.get('postal_code')  
         
-        if not all([payment_method, address, country, city, zip_code]):
+        if not all([address, country, city, zip_code]):
             messages.error(request, 'Please fill in all required fields')
             return redirect('Payment:checkout', order_id=order_id)
         
@@ -69,12 +68,16 @@ def checkout(request, order_id):
     # Get cart items and calculate totals
     cart_items = order.carts.all()
     subtotal = sum(Decimal(cart.total()) for cart in cart_items)
+    tax =0
+    shipping_cost = 0
     total = subtotal
     
     context = {
         'order': order,
         'cart_items': cart_items,
         'subtotal': format(subtotal, '.2f'),
+        'tax':format(tax, '.2f'),
+        'shipping_cost': format(shipping_cost,'.2f'),
         'total': format(total, '.2f')
     }
     
